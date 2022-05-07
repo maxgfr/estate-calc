@@ -22,6 +22,7 @@ import {
   getTotalPrice,
   getTotalPriceMortgage,
   getProfitability,
+  getInitialContribution,
 } from "../utils";
 
 const pattern = [
@@ -152,6 +153,18 @@ const Home: NextPage = () => {
           {"€ "}
         </ListItem>
         <ListItem>
+          Apport:{" "}
+          {getInitialContribution(
+            state.bankLoan,
+            getTotalPrice(
+              state.housingPrice,
+              state.notaryFees,
+              state.houseWorks
+            )
+          )}
+          {"€ "}
+        </ListItem>
+        <ListItem>
           Coût total du crédit:{" "}
           {getTotalPriceMortgage(
             state.bankLoan,
@@ -216,6 +229,14 @@ const Home: NextPage = () => {
                   state.bankLoanPeriod
                 )
               )
+            ),
+            getInitialContribution(
+              state.bankLoan,
+              getTotalPrice(
+                state.housingPrice,
+                state.notaryFees,
+                state.houseWorks
+              )
             )
           )}
           {"%"}
@@ -232,7 +253,8 @@ const Home: NextPage = () => {
               state.housingPrice,
               state.notaryFees,
               state.houseWorks
-            )
+            ),
+            0
           )}
           {"%"}
         </ListItem>
