@@ -78,7 +78,6 @@ const Home: NextPage = () => {
 
   return (
     <Box
-      ref={ref}
       display="flex"
       flexDirection="column"
       maxWidth="1400px"
