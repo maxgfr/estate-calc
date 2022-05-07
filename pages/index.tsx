@@ -13,11 +13,48 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
+import { loanInterestCalculator, loanPaymentCalculator } from "../utils";
+
+const pattern = [
+  {
+    title: "Achat 🏠",
+    value: [
+      { key: "housingPrice", name: "Prix du logement", step: 1000 },
+      { key: "notaryFees", name: "Frais notariaux", step: 1000 },
+      { key: "houseWorks", name: "Travaux", step: 1000 },
+    ],
+  },
+  {
+    title: "Crédit 💳",
+    value: [
+      { key: "bankContribution", name: "Apport", step: 1000 },
+      { key: "bankLoan", name: "Montant emprunté", step: 1000 },
+      { key: "bankRate", name: "Taux", step: 0.1 },
+      { key: "bankLoanPeriod", name: "Durée du prêt (en année)", step: 1 },
+    ],
+  },
+  {
+    title: "Location 💰",
+    value: [
+      { key: "rent", name: "Loyer annuelle (charges comprises)", step: 100 },
+      {
+        key: "rentalCharges",
+        name: "Charges annuelle de copropriété",
+        step: 100,
+      },
+      {
+        key: "propertyTax",
+        name: "Taxe foncière",
+        step: 100,
+      },
+    ],
+  },
+] as const;
+
+type Key = typeof pattern[number]["value"][number]["key"];
 
 type State = {
-  housingPrice: number;
-  notaryFees: number;
-  houseWorks: number;
+  [key in Key]: number;
 };
 
 const Home: NextPage = () => {
@@ -29,79 +66,93 @@ const Home: NextPage = () => {
   }, [router.query]);
 
   const onChangeState = (key: string, value: number) => {
-    const parseValue = isNaN(value) ? 0 : value;
-    setState({ ...state, [key]: parseValue });
-    router.replace({
-      query: { ...router.query, [key]: parseValue },
-    });
+    setState({ ...state, [key]: value });
+    router.replace(
+      {
+        query: { ...router.query, [key]: value },
+      },
+      undefined,
+      { shallow: true }
+    );
   };
 
   return (
     <Box
+      ref={ref}
       display="flex"
       flexDirection="column"
       maxWidth="1400px"
       marginX="auto"
       paddingX={"10vw"}
+      paddingY={"2vw"}
     >
       <Head>
-        <title>Renta Immo</title>
+        <title>Rentabilité immobilière</title>
       </Head>
-      <Text alignSelf={"center"} fontSize="6xl" marginBottom={"4"}>
-        Renta-immo
+      <Text alignSelf={"center"} fontSize="6xl" fontWeight={"extrabold"}>
+        Calcul de rentabilité immobilière
       </Text>
-      <Text fontSize="3xl" fontWeight={"bold"} marginBottom={"2"}>
-        Achat
+      {pattern.map(pattern => (
+        <Box key={pattern.title} marginTop={"40px"}>
+          <Text fontSize="3xl" fontWeight={"bold"}>
+            {pattern.title}
+          </Text>
+          {pattern.value.map(({ key, name, step }) => (
+            <Box key={key} marginTop={"15px"}>
+              <FormControl variant="floating" isRequired>
+                <FormLabel>{name}</FormLabel>
+                <NumberInput
+                  min={0}
+                  step={step ?? 1000}
+                  onChange={(_valueString, valueNumber) =>
+                    onChangeState(key, valueNumber)
+                  }
+                  onBlur={e => {
+                    e.preventDefault();
+                  }}
+                  value={state[key as keyof State]}
+                >
+                  <NumberInputField />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              </FormControl>
+            </Box>
+          ))}
+        </Box>
+      ))}
+
+      <Text
+        fontSize="3xl"
+        fontWeight={"bold"}
+        marginTop={"40px"}
+        marginBottom={"10px"}
+      >
+        Résultat 🚀
       </Text>
-      <FormControl variant="floating" isRequired>
-        <FormLabel>Prix du logement</FormLabel>
-        <NumberInput
-          step={1000}
-          min={0}
-          onChange={(_valueString, valueNumber) =>
-            onChangeState("housingPrice", valueNumber)
-          }
-          value={state.housingPrice}
-        >
-          <NumberInputField />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-      </FormControl>
-      <FormControl variant="floating" isRequired marginTop={"20px"}>
-        <FormLabel>Frais de notaire</FormLabel>
-        <NumberInput
-          step={500}
-          onChange={(_valueString, valueNumber) =>
-            onChangeState("notaryFees", valueNumber)
-          }
-          value={state.notaryFees}
-        >
-          <NumberInputField />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-      </FormControl>
-      <FormControl variant="floating" isRequired marginTop={"20px"}>
-        <FormLabel>Travaux</FormLabel>
-        <NumberInput
-          step={500}
-          onChange={(_valueString, valueNumber) =>
-            onChangeState("houseWorks", valueNumber)
-          }
-          value={state.houseWorks}
-        >
-          <NumberInputField />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-      </FormControl>
+      <Box marginBottom="10px">
+        <Text fontSize="xl" fontWeight={"bold"} marginBottom="5px">
+          Prêt
+        </Text>
+        <Text>
+          Mensualité :{" "}
+          {loanPaymentCalculator(
+            state.bankLoan,
+            state.bankRate,
+            state.bankLoanPeriod
+          )}
+        </Text>
+        <Text>
+          Coût intérêt :{" "}
+          {loanInterestCalculator(
+            state.bankLoan,
+            state.bankRate,
+            state.bankLoanPeriod
+          )}
+        </Text>
+      </Box>
     </Box>
   );
 };
