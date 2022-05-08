@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import {
   getTotalFeesMortgage,
@@ -72,7 +72,7 @@ type State = {
 
 const Home: NextPage = () => {
   const router = useRouter();
-  const [state, setState] = React.useState<State>({} as State);
+  const [state, setState] = useState<State>({} as State);
 
   useEffect(() => {
     setState(router.query as unknown as State);
@@ -88,6 +88,52 @@ const Home: NextPage = () => {
       { shallow: true }
     );
   };
+
+  const totalPrice = useMemo(
+    () => getTotalPrice(state.housingPrice, state.notaryFees, state.houseWorks),
+    [state.houseWorks, state.housingPrice, state.notaryFees]
+  );
+
+  const initialContribution = useMemo(
+    () => getInitialContribution(state.bankLoan, totalPrice),
+    [state.bankLoan, totalPrice]
+  );
+
+  const monthlyMortgagePayment = useMemo(
+    () =>
+      getMonthlyMortgagePayment(
+        state.bankLoan,
+        state.bankRate,
+        state.bankLoanPeriod
+      ),
+    [state.bankLoan, state.bankRate, state.bankLoanPeriod]
+  );
+
+  const totalFeesMortgage = useMemo(
+    () =>
+      getTotalFeesMortgage(
+        state.bankLoan,
+        state.bankLoanPeriod,
+        monthlyMortgagePayment
+      ),
+    [state.bankLoan, state.bankLoanPeriod, monthlyMortgagePayment]
+  );
+
+  const totalPriceMortgage = useMemo(
+    () => getTotalPriceMortgage(state.bankLoan, totalFeesMortgage),
+    [state.bankLoan, totalFeesMortgage]
+  );
+
+  const revenuPerMonth = useMemo(
+    () => getRevenuPerMonth(state.rent, state.rentalCharges, state.propertyTax),
+    [state.rent, state.rentalCharges, state.propertyTax]
+  );
+
+  const profitabilityCredit = useMemo(
+    () =>
+      getProfitability(revenuPerMonth, totalPriceMortgage, initialContribution),
+    [revenuPerMonth, totalPriceMortgage, initialContribution]
+  );
 
   return (
     <Box
@@ -143,121 +189,12 @@ const Home: NextPage = () => {
         Résultat 🚀
       </Text>
       <UnorderedList marginBottom="10px">
-        <ListItem>
-          Coût total de l’investissement:{" "}
-          {getTotalPrice(
-            state.housingPrice,
-            state.notaryFees,
-            state.houseWorks
-          )}
-          {"€ "}
-        </ListItem>
-        <ListItem>
-          Apport:{" "}
-          {getInitialContribution(
-            state.bankLoan,
-            getTotalPrice(
-              state.housingPrice,
-              state.notaryFees,
-              state.houseWorks
-            )
-          )}
-          {"€ "}
-        </ListItem>
-        <ListItem>
-          Coût total du crédit:{" "}
-          {getTotalPriceMortgage(
-            state.bankLoan,
-            getTotalFeesMortgage(
-              state.bankLoan,
-              state.bankLoanPeriod,
-              getMonthlyMortgagePayment(
-                state.bankLoan,
-                state.bankRate,
-                state.bankLoanPeriod
-              )
-            )
-          )}
-          {"€ "}
-          (dont{" "}
-          {getTotalFeesMortgage(
-            state.bankLoan,
-            state.bankLoanPeriod,
-            getMonthlyMortgagePayment(
-              state.bankLoan,
-              state.bankRate,
-              state.bankLoanPeriod
-            )
-          )}
-          {"€ "}
-          d&apos;intérêt)
-        </ListItem>
-        <ListItem>
-          Mensualité du prêt :{" "}
-          {getMonthlyMortgagePayment(
-            state.bankLoan,
-            state.bankRate,
-            state.bankLoanPeriod
-          )}
-          {"€"}
-        </ListItem>
-        <ListItem>
-          Revenu locatif mensuel brut :{" "}
-          {getRevenuPerMonth(
-            state.rent,
-            state.rentalCharges,
-            state.propertyTax
-          )}
-          {"€"}
-        </ListItem>
-        <ListItem>
-          Rentabilité brut basé sur le crédit :{" "}
-          {getProfitability(
-            getRevenuPerMonth(
-              state.rent,
-              state.rentalCharges,
-              state.propertyTax
-            ),
-            getTotalPriceMortgage(
-              state.bankLoan,
-              getTotalFeesMortgage(
-                state.bankLoan,
-                state.bankLoanPeriod,
-                getMonthlyMortgagePayment(
-                  state.bankLoan,
-                  state.bankRate,
-                  state.bankLoanPeriod
-                )
-              )
-            ),
-            getInitialContribution(
-              state.bankLoan,
-              getTotalPrice(
-                state.housingPrice,
-                state.notaryFees,
-                state.houseWorks
-              )
-            )
-          )}
-          {"%"}
-        </ListItem>
-        <ListItem>
-          Rentabilité brut basé sur le prix du bien :{" "}
-          {getProfitability(
-            getRevenuPerMonth(
-              state.rent,
-              state.rentalCharges,
-              state.propertyTax
-            ),
-            getTotalPrice(
-              state.housingPrice,
-              state.notaryFees,
-              state.houseWorks
-            ),
-            0
-          )}
-          {"%"}
-        </ListItem>
+        <ListItem fontSize="large">{`Coût total de l’investissement: ${totalPrice} €`}</ListItem>
+        <ListItem fontSize="large">{`Apport: ${initialContribution} €`}</ListItem>
+        <ListItem fontSize="large">{`Coût total du crédit: ${totalPriceMortgage} € (dont ${totalFeesMortgage} € d'intérêts)`}</ListItem>
+        <ListItem fontSize="large">{`Mensualité du prêt: ${monthlyMortgagePayment} €`}</ListItem>
+        <ListItem fontSize="large">{`Revenu locatif mensuel brut : ${revenuPerMonth} €`}</ListItem>
+        <ListItem fontSize="large">{`Rentabilité brut : ${profitabilityCredit} %`}</ListItem>
       </UnorderedList>
     </Box>
   );
