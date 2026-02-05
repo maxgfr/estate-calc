@@ -101,6 +101,7 @@ const Home: NextPage = () => {
   const router = useRouter();
   const [state, setState] = useState<State>(defaultState);
   const { colorMode, setColorMode } = useColorMode();
+  const basePath = router.basePath || "";
 
   const bgCard = useColorModeValue("white", "gray.800");
   const bgCashflowPositive = useColorModeValue("green.50", "green.900");
@@ -277,6 +278,11 @@ const Home: NextPage = () => {
         />
         <meta name="keywords" content="real estate calculator, rental yield, cashflow calculator, mortgage calculator, investment property ROI, landlord tools" />
         <link rel="canonical" href="https://maxgfr.github.io/real-estate-calculator/" />
+
+        {/* Favicon and Icons */}
+        <link rel="icon" type="image/svg+xml" href={`${basePath}/favicon.svg`} />
+        <link rel="apple-touch-icon" href={`${basePath}/icon.svg`} />
+        <link rel="manifest" href={`${basePath}/manifest.json`} />
 
         {/* Open Graph */}
         <meta property="og:type" content="website" />
