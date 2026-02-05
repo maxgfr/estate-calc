@@ -1,7 +1,6 @@
 # real-estate-calculator
 
 ![CI](https://github.com/maxgfr/real-estate-calculator/workflows/CI/badge.svg)
-![Tests](https://github.com/maxgfr/real-estate-calculator/workflows/Tests/badge.svg)
 
 **Calculate rental property ROI, cashflow, and yield in seconds.** Make smarter real estate investment decisions with our free, modern calculator featuring Excel export.
 
