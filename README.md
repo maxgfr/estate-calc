@@ -1,24 +1,101 @@
-# renta-immo
+# Real Estate ROI Calculator
 
-## Description
+Online calculator to evaluate the profitability of a real estate rental investment.
 
-`renta-immo` est un outil qui vous aide à calculer la rentabilité d'un investissement immobilier.
+## Features
 
-![Alt Text](https://raw.githubusercontent.com/maxgfr/renta-immo/main/.github/assets/main.png)
+- Automatic gross and net yield calculation
+- Mortgage monthly payment simulation
+- Monthly cashflow calculation
+- Export results to Excel file
+- Realistic default values to get started quickly
+- Responsive interface (mobile and desktop)
+- Dark/Light/System theme support
+- Visual performance indicators (positive/negative cashflow, yield)
+
+## Calculations
+
+### Gross Yield
+```
+Gross Yield = (Annual Rent / Total Investment Cost) × 100
+```
+
+### Net Yield
+```
+Net Monthly Income = (Annual Rent - Charges - Property Tax) / 12
+Net Yield = (Net Annual Income / Total Investment Cost) × 100
+```
+
+### Monthly Mortgage Payment (Constant Annuity Formula)
+```
+M = P × [t(1+t)^n] / [(1+t)^n - 1]
+```
+- M = Monthly payment
+- P = Loan amount
+- t = Monthly rate (Annual rate / 12 / 100)
+- n = Number of months (Duration × 12)
+
+### Monthly Cashflow
+```
+Cashflow = Net Monthly Income - Monthly Mortgage Payment
+```
+
+### Total Credit Cost
+```
+Total Cost = Monthly Payment × Number of Months
+Total Interest = Total Cost - Loan Amount
+```
+
+## Tech Stack
+
+- **Framework**: Next.js 14
+- **UI**: Chakra UI
+- **Language**: TypeScript
+- **Testing**: Jest, React Testing Library
+- **Package Manager**: pnpm
+- **Deployment**: GitHub Pages
+
+## Installation
+
+```bash
+# Install dependencies
+pnpm install
+
+# Run development server
+pnpm dev
+
+# Build for production
+pnpm build
+
+# Run production server
+pnpm start
+
+# Run tests
+pnpm test
+
+# Run tests in watch mode
+pnpm test:watch
+
+# Run tests with coverage
+pnpm test:coverage
+```
 
 ## Usage
 
-### Dev mode
+1. Enter purchase parameters (property price, notary fees, renovation costs)
+2. Configure mortgage (loan amount, rate, duration)
+3. Enter rental parameters (rent, charges, property tax)
+4. Results update in real-time
+5. Export your calculations to Excel with the "Export" button
 
-```bash
-yarn # to install dependencies
-yarn dev # to run the server
-```
+## Performance Indicators
 
-### Production mode
+- **Positive cashflow**: The investment generates income each month
+- **Negative cashflow**: The investment costs money each month (avoid)
+- **Net yield > 5%**: Excellent investment
+- **Net yield 3-5%**: Good investment
+- **Net yield < 3%**: Low profitability
 
-```bash
-yarn # to install dependencies
-yarn build # to build the project
-yarn start # to run the server
-```
+## License
+
+MIT

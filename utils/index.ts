@@ -1,81 +1,86 @@
-export const getTotalFeesMortgage = (
-  amountRented: string | number,
-  loanDurationInYear: string | number,
+export const getTotalMortgageInterest = (
+  loanAmount: string | number,
+  loanDurationYears: string | number,
   monthlyPayment: string | number,
   decimal = 0
 ): string => {
-  const monthlyLoanDuration = Number(loanDurationInYear) * 12;
-  const monthlyWithoutFees = Number(amountRented) / monthlyLoanDuration;
-  const monthlyFees = Number(monthlyPayment) - monthlyWithoutFees;
-  const totalFees = monthlyFees * monthlyLoanDuration;
-  return isNaN(totalFees) ? "0" : totalFees.toFixed(decimal);
+  const months = Number(loanDurationYears) * 12;
+  const principalOnly = Number(loanAmount) / months;
+  const interestOnly = Number(monthlyPayment) - principalOnly;
+  const totalInterest = interestOnly * months;
+  return isNaN(totalInterest) ? "0" : totalInterest.toFixed(decimal);
 };
 
 export const getMonthlyMortgagePayment = (
-  amountRented: string | number,
+  loanAmount: string | number,
   interestRate: string | number,
-  loanDurationInYear: string | number,
+  loanDurationYears: string | number,
   decimal = 0
 ): string => {
-  const monthlyLoanDuration = Number(loanDurationInYear) * 12;
-  const interestPerMonth = Number(interestRate) / 100 / 12;
-  const monthlyPayment =
-    (Number(amountRented) * interestPerMonth) /
-    (1 - Math.pow(1 + interestPerMonth, -monthlyLoanDuration));
-  return isNaN(monthlyPayment) ? "0" : monthlyPayment.toFixed(decimal);
+  const months = Number(loanDurationYears) * 12;
+  const monthlyRate = Number(interestRate) / 100 / 12;
+
+  if (monthlyRate === 0) {
+    const payment = Number(loanAmount) / months;
+    return isNaN(payment) || !isFinite(payment) ? "0" : payment.toFixed(decimal);
+  }
+
+  const payment =
+    (Number(loanAmount) * monthlyRate) /
+    (1 - Math.pow(1 + monthlyRate, -months));
+  return isNaN(payment) || !isFinite(payment)
+    ? "0"
+    : payment.toFixed(decimal);
 };
 
-export const getTotalPriceMortgage = (
-  amountRented: string | number,
-  totalFees: string | number,
+export const getTotalMortgageCost = (
+  loanAmount: string | number,
+  totalInterest: string | number,
   decimal = 0
 ): string => {
-  const totalPrice = Number(amountRented) + Number(totalFees);
-  return isNaN(totalPrice) ? "0" : totalPrice.toFixed(decimal);
+  const total = Number(loanAmount) + Number(totalInterest);
+  return isNaN(total) ? "0" : total.toFixed(decimal);
 };
 
-export const getRevenuPerMonth = (
-  rentPerYear: string | number,
-  rentalChargesPerYear: string | number,
-  propertyTaxPerYear: string | number,
+export const getNetMonthlyIncome = (
+  annualRent: string | number,
+  annualCharges: string | number,
+  annualPropertyTax: string | number,
   decimal = 0
 ): string => {
-  const monthlyRent =
-    Number(rentPerYear) / 12 -
-    Number(rentalChargesPerYear) / 12 -
-    Number(propertyTaxPerYear) / 12;
-  return isNaN(monthlyRent) ? "0" : monthlyRent.toFixed(decimal);
+  const monthly =
+    Number(annualRent) / 12 -
+    Number(annualCharges) / 12 -
+    Number(annualPropertyTax) / 12;
+  return isNaN(monthly) ? "0" : monthly.toFixed(decimal);
 };
 
-export const getTotalPrice = (
-  housingPrice: string | number,
+export const getTotalPurchasePrice = (
+  propertyPrice: string | number,
   notaryFees: string | number,
-  houseWorks: string | number,
+  renovationCosts: string | number,
   decimal = 0
 ): string => {
-  const totalPrice =
-    Number(housingPrice) + Number(notaryFees) + Number(houseWorks);
-  return isNaN(totalPrice) ? "0" : totalPrice.toFixed(decimal);
+  const total =
+    Number(propertyPrice) + Number(notaryFees) + Number(renovationCosts);
+  return isNaN(total) ? "0" : total.toFixed(decimal);
 };
 
-export const getProfitability = (
-  revenuPerMonth: string | number,
-  totalPriceLoan: string | number,
-  initialContribution: string | number,
+export const getYield = (
+  annualRevenue: string | number,
+  totalCost: string | number,
   decimal = 2
 ): string => {
-  const revenuPerYear = Number(revenuPerMonth) * 12;
-  const profitability =
-    (revenuPerYear / (Number(totalPriceLoan) + Number(initialContribution))) *
-    100;
-  return isNaN(profitability) ? "0" : profitability.toFixed(decimal);
+  const yieldPercentage = (Number(annualRevenue) / Number(totalCost)) * 100;
+  return isNaN(yieldPercentage) || !isFinite(yieldPercentage)
+    ? "0"
+    : yieldPercentage.toFixed(decimal);
 };
 
-export const getInitialContribution = (
-  amountRent: string | number,
-  totalPrice: string | number
+export const getDownPayment = (
+  loanAmount: string | number,
+  totalCost: string | number
 ): string => {
-  console.log(totalPrice, amountRent);
-  const initialContribution = Number(totalPrice) - Number(amountRent);
-  return isNaN(initialContribution) ? "0" : initialContribution.toFixed(0);
+  const downPayment = Number(totalCost) - Number(loanAmount);
+  return isNaN(downPayment) ? "0" : downPayment.toFixed(0);
 };
