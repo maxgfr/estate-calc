@@ -4,8 +4,8 @@ const isProd = process.env.NODE_ENV === 'production';
 const nextConfig = {
   reactStrictMode: true,
   output: 'export',
-  basePath: isProd ? '/estate-calc' : '',
-  assetPrefix: isProd ? '/estate-calc' : '',
+  basePath: isProd ? '/real-estate-calculator' : '',
+  assetPrefix: isProd ? '/real-estate-calculator' : '',
   images: {
     unoptimized: true,
   },
