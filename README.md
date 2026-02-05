@@ -1,7 +1,7 @@
-# Estate Calc
+# real-estate-calculator
 
-![CI](https://github.com/maxgfr/estate-calc/workflows/CI/badge.svg)
-![Tests](https://github.com/maxgfr/estate-calc/workflows/Tests/badge.svg)
+![CI](https://github.com/maxgfr/real-estate-calculator/workflows/CI/badge.svg)
+![Tests](https://github.com/maxgfr/real-estate-calculator/workflows/Tests/badge.svg)
 
 **Calculate rental property ROI, cashflow, and yield in seconds.** Make smarter real estate investment decisions with our free, modern calculator featuring Excel export.
 
@@ -61,7 +61,7 @@ pnpm test
 The calculator automatically generates a shareable URL with your values. For example:
 
 ```
-https://maxgfr.github.io/estate-calc/?housingPrice=250000&notaryFees=18000&houseWorks=5000&bankLoan=200000&bankRate=3.2&bankLoanPeriod=25&rent=1200&rentalCharges=100&propertyTax=1200
+https://maxgfr.github.io/real-estate-calculator/?housingPrice=250000&notaryFees=18000&houseWorks=5000&bankLoan=200000&bankRate=3.2&bankLoanPeriod=25&rent=1200&rentalCharges=100&propertyTax=1200
 ```
 
 This allows you to bookmark specific scenarios or share them with others.
@@ -69,7 +69,7 @@ This allows you to bookmark specific scenarios or share them with others.
 ## 📁 Project Structure
 
 ```
-estate-calc/
+real-estate-calculator/
 ├── pages/
 │   ├── index.tsx          # Main calculator page
 │   └── _app.tsx           # App with theme provider

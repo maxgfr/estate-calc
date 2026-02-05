@@ -276,13 +276,13 @@ const Home: NextPage = () => {
           content="Calculate rental property ROI, cashflow, and yield. Free Excel export. Make smarter real estate investment decisions."
         />
         <meta name="keywords" content="real estate calculator, rental yield, cashflow calculator, mortgage calculator, investment property ROI, landlord tools" />
-        <link rel="canonical" href="https://yourusername.github.io/estate-calc/" />
+        <link rel="canonical" href="https://maxgfr.github.io/real-estate-calculator/" />
 
         {/* Open Graph */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Estate Calc - Real Estate ROI Calculator" />
         <meta property="og:description" content="Calculate rental property ROI, cashflow, and yield. Free Excel export. Make smarter real estate investment decisions." />
-        <meta property="og:url" content="https://yourusername.github.io/estate-calc/" />
+        <meta property="og:url" content="https://maxgfr.github.io/real-estate-calculator/" />
         <meta property="og:locale" content="en_US" />
 
         {/* Twitter Card */}
@@ -299,7 +299,7 @@ const Home: NextPage = () => {
               "@type": "WebApplication",
               "name": "Estate Calc - Real Estate ROI Calculator",
               "description": "Calculate rental property ROI, cashflow, and yield. Free Excel export for real estate investors.",
-              "url": "https://yourusername.github.io/estate-calc/",
+              "url": "https://maxgfr.github.io/real-estate-calculator/",
               "applicationCategory": "FinanceApplication",
               "operatingSystem": "Web",
               "offers": {
@@ -316,7 +316,7 @@ const Home: NextPage = () => {
               ],
               "author": {
                 "@type": "Organization",
-                "name": "estate-calc"
+                "name": "real-estate-calculator"
               }
             }),
           }}
